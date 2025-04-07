@@ -1,0 +1,9 @@
+*{
+    padding: unset;
+    margin: unset;
+    box-sizing: border-box;
+}
+
+body{
+    min-height: 100vh;
+}
