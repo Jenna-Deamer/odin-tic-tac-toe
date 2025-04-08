@@ -15,20 +15,38 @@ const gameBoard = (function () {
     return { getGameBoard, printGameBoard }
 })(); // IIFE since I only need one instance of it!
 
-const gameController = (function (playerOne, playerTwo) {
+const gameController = (function () {
     gameBoard.getGameBoard();
     gameBoard.printGameBoard();
+
+    // Play a round
+    const playRound = (playerOne, playerTwo) => {
+        // Determine whose turn it is
+        if (playerOne.getTurn() === true) {
+            console.log("It's " + playerOne.name + " turn.")
+            // Push X to selected cell
+
+            // Print updated game board
+
+            // switch turn
+        }
+        else {
+            console.log("It's " + playerTwo.name + " turn.")
+        };
+    };
+    return { playRound };
 }());
 
 // Player obj
-const createPlayer = function (name, marker, isTurn) {
+const createPlayer = function (name, marker) {
     let isWinner = false;
+    let isTurn = false;
 
     const getWinnerStatus = () => isWinner;
     const setWinnerStatus = () => {
         return isWinner = true;
     };
-    
+
     const getTurn = () => isTurn;
 
     const setTurn = () => {
@@ -40,19 +58,20 @@ const createPlayer = function (name, marker, isTurn) {
         };
     };
 
-    return { name, marker, isTurn, setTurn, getTurn, setWinnerStatus, getWinnerStatus };
+    return { name, marker, setTurn, getTurn, setWinnerStatus, getWinnerStatus };
 };
 
 // Create 2 players
-const playerOne = createPlayer("Player 1", "X", true);
+const playerOne = createPlayer("Player 1", "X");
 console.log(playerOne.name);
 console.log(playerOne.marker);
-console.log(playerOne.isTurn);
+console.log("It's player one's turn: " + playerOne.setTurn());
 console.log("Has Won: " + playerOne.getWinnerStatus());
 
-const playerTwo = createPlayer("Player 2", "O", false);
+const playerTwo = createPlayer("Player 2", "O");
 console.log(playerTwo.name);
 console.log(playerTwo.marker);
-console.log(playerTwo.isTurn);
+console.log("It's player two's turn: " + playerTwo.getTurn());
 console.log("Has Won: " + playerTwo.getWinnerStatus());
 
+gameController.playRound(playerOne, playerTwo);
