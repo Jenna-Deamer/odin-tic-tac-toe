@@ -3,47 +3,56 @@ const gameBoard = (function () {
         rowOne = [0, 1, 2],
         rowTwo = [3, 4, 5],
         rowThree = [6, 7, 8]
-    ]
+    ];
 
-    console.log(gameBoard[0, 0])
-    console.log(gameBoard[0, 1])
-    console.log(gameBoard[0, 2])
+    const getGameBoard = () => gameBoard;
+    const printGameBoard = () => {
+        console.log(gameBoard[0, 0])
+        console.log(gameBoard[0, 1])
+        console.log(gameBoard[0, 2])
+    };
+
+    return { getGameBoard, printGameBoard }
 })(); // IIFE since I only need one instance of it!
 
-const gameCOntrol = (function () {
-
+const gameController = (function (playerOne, playerTwo) {
+    gameBoard.getGameBoard();
+    gameBoard.printGameBoard();
 }());
 
 // Player obj
 const createPlayer = function (name, marker, isTurn) {
     let isWinner = false;
 
-    function setWinner() {
+    const getWinnerStatus = () => isWinner;
+    const setWinnerStatus = () => {
         return isWinner = true;
     };
+    
+    const getTurn = () => isTurn;
 
-    function switchTurn() {
+    const setTurn = () => {
         if (isTurn === true) {
             return isTurn = false;
         }
         else {
             return isTurn = true;
-        }
+        };
     };
 
-    return { name, marker, isTurn, switchTurn, isWinner };
+    return { name, marker, isTurn, setTurn, getTurn, setWinnerStatus, getWinnerStatus };
 };
 
 // Create 2 players
 const playerOne = createPlayer("Player 1", "X", true);
-console.log(playerOne.name)
-console.log(playerOne.marker)
-console.log(playerOne.isTurn)
-console.log(playerOne.isWinner)
+console.log(playerOne.name);
+console.log(playerOne.marker);
+console.log(playerOne.isTurn);
+console.log("Has Won: " + playerOne.getWinnerStatus());
 
 const playerTwo = createPlayer("Player 2", "O", false);
-console.log(playerTwo.name)
-console.log(playerTwo.marker)
-console.log(playerTwo.isTurn)
-console.log(playerTwo.isWinner)
+console.log(playerTwo.name);
+console.log(playerTwo.marker);
+console.log(playerTwo.isTurn);
+console.log("Has Won: " + playerTwo.getWinnerStatus());
 
