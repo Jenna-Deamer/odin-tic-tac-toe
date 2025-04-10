@@ -1,64 +1,65 @@
 const gameBoard = (function () {
-    let gameBoard = [
-        rowOne = [0, 1, 2],
-        rowTwo = [3, 4, 5],
-        rowThree = [6, 7, 8]
-    ];
+  let gameBoard = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+  ];
 
-    const getGameBoard = () => gameBoard;
-    const printGameBoard = () => {
-        console.log(gameBoard[0, 0])
-        console.log(gameBoard[0, 1])
-        console.log(gameBoard[0, 2])
-    };
+  const getGameBoard = () => gameBoard;
+  const setGameBoard = () => {
+    gameBoard[selectedRow].splice(selectedCell,1,'X');
+  };
+  const printGameBoard = () => {
+    console.log(gameBoard[0]);
+    console.log(gameBoard[1]);
+    console.log(gameBoard[2]);
+  };
 
-    return { getGameBoard, printGameBoard }
+  return { getGameBoard, setGameBoard, printGameBoard };
 })(); // IIFE since I only need one instance of it!
 
 const gameController = (function () {
-    gameBoard.getGameBoard();
-    gameBoard.printGameBoard();
+  gameBoard.getGameBoard();
+  gameBoard.printGameBoard();
 
-    // Play a round
-    const playRound = (playerOne, playerTwo) => {
-        // Determine whose turn it is
-        if (playerOne.getTurn() === true) {
-            console.log("It's " + playerOne.name + " turn.")
-            // Push X to selected cell
-
-            // Print updated game board
-
-            // switch turn
-        }
-        else {
-            console.log("It's " + playerTwo.name + " turn.")
-        };
-    };
-    return { playRound };
-}());
+  // Play a round
+  const playRound = (playerOne, playerTwo) => {
+    // Determine whose turn it is
+    if (playerOne.getTurn() === true) {
+      console.log("It's " + playerOne.name + " turn.");
+      // Push X to selected cell
+      gameBoard.setGameBoard(playerOne, selectedCell, selectedRow);
+      // Print updated game board
+      gameBoard.printGameBoard();
+      // switch turn
+      playerOne.setTurn();
+    } else {
+      console.log("It's " + playerTwo.name + " turn.");
+    }
+  };
+  return { playRound };
+})();
 
 // Player obj
 const createPlayer = function (name, marker) {
-    let isWinner = false;
-    let isTurn = false;
+  let isWinner = false;
+  let isTurn = false;
 
-    const getWinnerStatus = () => isWinner;
-    const setWinnerStatus = () => {
-        return isWinner = true;
-    };
+  const getWinnerStatus = () => isWinner;
+  const setWinnerStatus = () => {
+    return (isWinner = true);
+  };
+  const getTurn = () => isTurn;
 
-    const getTurn = () => isTurn;
+  const setTurn = () => {
+    if (isTurn === true) {
+      return (isTurn = false);
+    } else {
+      return (isTurn = true);
+    }
+  };
 
-    const setTurn = () => {
-        if (isTurn === true) {
-            return isTurn = false;
-        }
-        else {
-            return isTurn = true;
-        };
-    };
-
-    return { name, marker, setTurn, getTurn, setWinnerStatus, getWinnerStatus };
+  return { name, marker, setTurn, getTurn, setWinnerStatus, getWinnerStatus };
 };
 
 // Create 2 players
