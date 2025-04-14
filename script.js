@@ -19,38 +19,50 @@ const gameBoard = (function () {
 })(); // IIFE since I only need one instance of it!
 
 const gameController = (function () {
-  let currentPlayer;
   gameBoard.getGameBoard();
   //   gameBoard.printGameBoard();
 
   const getCurrentPlayer = () => {
     if (playerOne.getTurn() === true) {
-      return (currentPlayer = playerOne);
+      return {
+        currentPlayer: playerOne,
+        nextPlayer: playerTwo,
+      };
     } else {
-      return (currentPlayer = playerTwo);
+      return {
+        currentPlayer: playerTwo,
+        nextPlayer: playerOne,
+      };
     }
   };
 
   // Play a round
   const playRound = () => {
+    let currentPlayer = getCurrentPlayer().currentPlayer;
+    let nextPlayer = getCurrentPlayer().nextPlayer;
+
+    console.log(
+      "It's " + currentPlayer.name + " Turn " + currentPlayer.getTurn()
+    );
     let marker = currentPlayer.getMarker();
     gameBoard.setGameBoard(marker, selectedCell, selectedRow);
     // Print updated board
     // gameBoard.printGameBoard();
+
     // Switch turn
-    
     currentPlayer.setTurn();
-    console.log(currentPlayer.name + "'s turn is over.");
-    console.log(currentPlayer.name + currentPlayer.isTurn);
+    console.log("Switching turns...");
+    nextPlayer.setTurn();
   };
 
-  const playGame = () =>{
-    for(let i = 0; i < 3; i++){
-        console.log("Round " + i);
-        getCurrentPlayer();
-        playRound();
+  const playGame = () => {
+    for (let i = 0; i < 3; i++) {
+      console.log("Round " + i);
+
+      getCurrentPlayer();
+      playRound();
     }
-  }
+  };
   return { playGame, getCurrentPlayer };
 })();
 
@@ -66,10 +78,10 @@ const createPlayer = function (name, marker) {
   const getTurn = () => isTurn;
 
   const setTurn = () => {
-    if (isTurn === true) {
-      return (isTurn = false);
+    if (!isTurn) {
+      isTurn = true;
     } else {
-      return (isTurn = true);
+      isTurn = false;
     }
   };
 
@@ -86,14 +98,20 @@ const createPlayer = function (name, marker) {
 
 // Create 2 players
 const playerOne = createPlayer("Player 1", "X");
-// Player one starts first.
+// Player one starts first
 playerOne.setTurn();
 const playerTwo = createPlayer("Player 2", "O");
 
 // Start game
 selectedCell = 0;
 selectedRow = 1;
-
+console.log("Before game start:");
+console.log("P1 isTurn: " + playerOne.getTurn());
+console.log("P2 isTurn: " + playerTwo.getTurn());
+console.log("---------");
 
 gameController.playGame();
-
+console.log("---------");
+console.log("After playGame:");
+console.log("P1 isTurn: " + playerOne.getTurn());
+console.log("P2 isTurn: " + playerTwo.getTurn());
