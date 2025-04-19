@@ -1,9 +1,9 @@
 // Game board module
 const gameBoard = (function () {
     let gameBoard = [
-        [0, 4, 1],
-        [0, 1, 4],
-        [1, 4, 0],
+        [1, 1, 1],
+        [4, 5, 20],
+        [33, 10, 14],
     ];
 
     function getGameBoard() {
@@ -74,7 +74,7 @@ const gameController = (function () {
 
         // gameBoard.setGameBoard(marker);
 
-        // gameBoard.printGameBoard();
+        gameBoard.printGameBoard();
 
         // Switch turn
         currentPlayer.setTurn();
@@ -155,6 +155,20 @@ const gameController = (function () {
             console.log("Player Two has won with a diagonal!");
             return (gameOver = true);
         }
+
+        // Check for tie
+        for (let i = 0; i < currentBoard.length; i++) {
+            // If all rows have a value >0 then all possibles turns have been made
+            currentBoard[i].forEach((i) => {
+                // if a 0 is found than there is still one or more cells left
+                if (i === 0) {
+                    return (gameOver = false);
+                } else {
+                    return (gameOver = "Draw");
+                }
+            });
+        }
+        console.log(gameOver);
     };
 
     const playGame = () => {
