@@ -1,12 +1,14 @@
 // Game board module
 const gameBoard = (function () {
     let gameBoard = [
-        [1, 4, 1],
-        [0, 0, 4],
+        [0, 4, 1],
+        [0, 1, 4],
         [1, 4, 0],
     ];
 
-    const getGameBoard = () => gameBoard;
+    function getGameBoard() {
+        return gameBoard;
+    }
 
     const setGameBoard = (marker) => {
         gameBoard[selectedRow].splice(selectedCell, 1, marker);
@@ -82,36 +84,42 @@ const gameController = (function () {
 
     const checkForWinner = () => {
         const currentBoard = gameBoard.getGameBoard();
-        let step = 0;
-        console.log("Checking for winner...");
-
         let rowOne = currentBoard[0];
         let rowTwo = currentBoard[1];
         let rowThree = currentBoard[2];
 
+        let step = 0;
+        console.log("Checking for winner...");
+
+        // check row for winner
         for (let i = 0; i < currentBoard.length; i++) {
-            console.log("Step: " + step);
+            console.log("Row Step: " + step);
             step++;
 
-            // Check rows
-            const sumRow = currentBoard[i].reduce((total, current) => total + current);
+            // Check sum of each row
+            const sumRow = currentBoard[i].reduce(
+                (total, current) => total + current
+            );
             console.log("Sum Row " + sumRow);
 
             if (sumRow === 3) {
                 console.log("Player One has won with a row!");
                 return (gameOver = true);
-            }
-            else if (sumRow === 12) {
+            } else if (sumRow === 12) {
                 console.log("Player Two has won with a row!");
                 return (gameOver = true);
-            };
-
-            // Check columns
-            // 0,0 1,0, 2,0
-            // 0,1, 1,1, 2,1
-            // 0,2, 1,2, 2,2
+            }
+        }
+        // reset step for next check
+        step = 0;
+        // Check columns
+        for (let i = 0; i < currentBoard.length; i++) {
+            console.log("Col Step: " + step);
+            step++;
 
             let colArr = [rowOne[i], rowTwo[i], rowThree[i]];
+
+            // check sum of each col
             const sumCol = colArr.reduce((total, current) => total + current);
             console.log("Sum Col " + sumCol);
 
@@ -121,20 +129,32 @@ const gameController = (function () {
             } else if (sumCol === 12) {
                 console.log("Player Two has won with a column!");
                 return (gameOver = true);
-            };
-        };
+            }
+        }
 
-        // Check diagonals outside of loop as there are only 2 possible 
-        // 0,0 1,1 2,2 
-        // 0,2, 1,1 2,0
+        // Check diagonals outside of loop as there are only 2 possible
+        // 0,0 1,1 2,2
+        // 0,2, 1,1 2,
+        let diagonalOne = [rowOne[(0, 0)], rowTwo[(0, 1)], rowThree[(0, 2)]];
+        let diagonalTwo = [rowOne[(0, 2)], rowTwo[(0, 1)], rowThree[(0, 0)]];
+        console.log(diagonalOne);
+        console.log(diagonalTwo);
 
-        // 0,0 0,1 0,2
-        // 1,0 1,1 1,1
-        // 2,0 2,1 2,2
+        // Check Sum of each diagonal
+        const sumDiagonalOne = diagonalOne.reduce(
+            (total, current) => total + current
+        );
+        const sumDiagonalTwo = diagonalTwo.reduce(
+            (total, current) => total + current
+        );
 
-        // create an array call reduce on it -> check for win
-        // Reverese array and call reduce on it -> check for win
-
+        if (sumDiagonalOne === 3 || sumDiagonalTwo === 3) {
+            console.log("Player One has won with a diagonal!");
+            return (gameOver = true);
+        } else if (sumDiagonalOne === 12 || sumDiagonalTwo === 12) {
+            console.log("Player Two has won with a diagonal!");
+            return (gameOver = true);
+        }
     };
 
     const playGame = () => {
