@@ -1,9 +1,10 @@
+
 // Game board module
 const gameBoard = (function () {
     let gameBoard = [
-        [1, 1, 1],
-        [4, 5, 20],
-        [33, 10, 14],
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0],
     ];
 
     function getGameBoard() {
@@ -72,7 +73,7 @@ const gameController = (function () {
 
         const marker = currentPlayer.getMarker();
 
-        // gameBoard.setGameBoard(marker);
+        gameBoard.setGameBoard(marker);
 
         gameBoard.printGameBoard();
 
@@ -186,8 +187,7 @@ playerOne.setTurn(); // Player One starts
 
 const playerTwo = createPlayer("Player 2", 4);
 
-let selectedCell = 0;
-let selectedRow = 1;
-
 // Start game
-gameController.playGame();
+    gameController.playGame();
+
+
