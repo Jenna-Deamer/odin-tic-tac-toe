@@ -21,7 +21,13 @@ const gameBoard = (function () {
         console.log(gameBoard[2]);
     };
 
-    return { getGameBoard, setGameBoard, printGameBoard };
+    const displayGameBoard = () => {
+        // Loop through gameBoard rows
+        // display value in each cell for each index in row
+
+        
+    }
+    return { getGameBoard, setGameBoard, printGameBoard, displayGameBoard};
 })();
 
 // Player factory function
