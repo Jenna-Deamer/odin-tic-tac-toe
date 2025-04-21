@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap');
+
 *{
     padding: unset;
     margin: unset;
@@ -7,13 +9,16 @@
 body{
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     /* Gradient From: https://www.gradientmagic.com/collection/lightbg*/
     background-image: repeating-linear-gradient(45deg, rgb(255,255,255) 0px, rgb(255,255,255) 10px,transparent 10px, transparent 11px),repeating-linear-gradient(135deg, rgb(255,255,255) 0px, rgb(255,255,255) 10px,transparent 10px, transparent 11px),linear-gradient(90deg, hsl(256,7%,84%),hsl(256,7%,84%));
-    
+    font-family: "Merienda", cursive;
 }
-
+h1{
+    margin-bottom: 1em;
+}
 #gameboard{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
