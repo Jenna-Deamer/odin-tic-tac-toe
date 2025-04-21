@@ -165,8 +165,8 @@ const gameController = (function () {
     // 0,2, 1,1 2,
     let diagonalOne = [rowOne[(0, 0)], rowTwo[(0, 1)], rowThree[(0, 2)]];
     let diagonalTwo = [rowOne[(0, 2)], rowTwo[(0, 1)], rowThree[(0, 0)]];
-    console.log(diagonalOne);
-    console.log(diagonalTwo);
+    // console.log(diagonalOne);
+    // console.log(diagonalTwo);
 
     // Check Sum of each diagonal
     const sumDiagonalOne = diagonalOne.reduce(
@@ -184,18 +184,18 @@ const gameController = (function () {
       return (gameOver = true);
     }
 
-    // Check for tie
-    for (let i = 0; i < currentBoard.length; i++) {
-      // If all rows have a value >0 then all possibles turns have been made
-      currentBoard[i].forEach((i) => {
-        // if a 0 is found than there is still one or more cells left
-        if (i === 0) {
-          return (gameOver = false);
-        } else {
-          return (gameOver = "Draw");
+    for(let i = 0; i < currentBoard.length; i++){
+       for(let j=0; j<currentBoard[i]; j++){
+        if(currentBoard[i][j] === 0){
+            console.log('zero found')
+            return gameOver = false;
         }
-      });
-    }
+        else{
+            gameOver = "Draw";
+        }
+       };    
+    };
+  
     console.log(gameOver);
   };
 
