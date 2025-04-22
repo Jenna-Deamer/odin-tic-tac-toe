@@ -22,10 +22,12 @@ const gameBoard = (function () {
   };
 
   const displayGameBoard = () => {
+    let id = 1; // id for buttons
     // clear previous board state to avoid duplicating boards
     gameBoardContainer.innerHTML = "";
     // Loop through gameBoard to get each row
     gameBoard.forEach((row) => {
+       
       // loop through each individual row
       console.log("Row ");
       console.log(row);
@@ -33,6 +35,8 @@ const gameBoard = (function () {
       row.forEach((cell) => {
         const gameCell = document.createElement("button");
         gameCell.classList.add("cell");
+        gameCell.setAttribute("id", id++);
+     
         // Display X, O or "" instead of num values
         if (cell === 1) {
           gameCell.innerHTML = "X";
@@ -40,7 +44,7 @@ const gameBoard = (function () {
           gameCell.innerHTML = "O";
         } else {
           gameCell.innerHTML = "";
-        };
+        }
 
         console.log("Cell " + cell);
         gameBoardContainer.appendChild(gameCell);
@@ -96,19 +100,28 @@ const gameController = (function () {
   const playRound = () => {
     const { currentPlayer, nextPlayer } = getCurrentPlayer();
     console.log("It's " + currentPlayer.name + "'s Turn");
-
-
-    const marker = currentPlayer.getMarker();
-
-    gameBoard.setGameBoard(marker);
-
     gameBoard.displayGameBoard();
-    // gameBoard.printGameBoard();
 
-    // Switch turn
-    currentPlayer.setTurn();
-    nextPlayer.setTurn();
-    console.log("Switching turns...");
+    const gameBoardCell = document.querySelectorAll(".cell");
+    gameBoardCell.forEach((button) => {
+      button.addEventListener("click", (e) => {
+        const clickedButtonID = e.target.id;
+        console.log("Cell clicked: " + clickedButtonID);
+        const marker = currentPlayer.getMarker();
+
+        // If cell is empty & gameOver != true/draw{}
+        gameBoard.setGameBoard(marker);
+        // re-run display to show change in board
+        gameBoard.displayGameBoard();
+
+        // Switch turn
+        currentPlayer.setTurn();
+        nextPlayer.setTurn();
+        console.log("Switching turns...");
+      });
+    });
+
+    // gameBoard.printGameBoard();
   };
 
   const checkForWinner = () => {
@@ -185,18 +198,17 @@ const gameController = (function () {
       return (gameOver = true);
     }
 
-    for(let i = 0; i < currentBoard.length; i++){
-       for(let j=0; j<currentBoard[i]; j++){
-        if(currentBoard[i][j] === 0){
-            console.log('zero found')
-            return gameOver = false;
+    for (let i = 0; i < currentBoard.length; i++) {
+      for (let j = 0; j < currentBoard[i]; j++) {
+        if (currentBoard[i][j] === 0) {
+          console.log("zero found");
+          return (gameOver = false);
+        } else {
+          gameOver = "Draw";
         }
-        else{
-            gameOver = "Draw";
-        }
-       };    
-    };
-  
+      }
+    }
+
     console.log(gameOver);
   };
 
