@@ -5,7 +5,7 @@ const gameBoardContainer = document.querySelector("#gameboard");
 const gameBoard = (function () {
   let gameBoard = [
     [0, 0, 0],
-    [0, 0, 0],
+    [0, 0, 1],
     [0, 0, 0],
   ];
 
@@ -103,7 +103,7 @@ const gameController = (function () {
     }
   };
 
-  const getSelectedSquare = (currentPlayer, nextPlayer) =>{
+  const getSelectedSquare = (currentPlayer, nextPlayer) => {
     const gameBoardCell = document.querySelectorAll(".cell");
     gameBoardCell.forEach((button) => {
       button.addEventListener("click", (e) => {
@@ -116,19 +116,27 @@ const gameController = (function () {
         let selectedRow = clickedRow;
 
         // If cell is empty & gameOver != true/draw{}
-        gameBoard.setGameBoard(marker, selectedRow, selectedCell);
-        // re-run display to show change in board
-        gameBoard.displayGameBoard();
-
-        // Switch turn
-        currentPlayer.setTurn();
-        nextPlayer.setTurn();
-        console.log("Switching turns...");
-       
+        if (button.innerHTML === "" && gameOver === false) {
+          gameBoard.setGameBoard(marker, selectedRow, selectedCell);
+          // re-run display to show change in board
+          gameBoard.displayGameBoard();
+          checkForWinner();
+            if(gameOver != false){
+                // Skip switching turns. Exit as soon as gameOver occurs
+                return;
+            }
+    
+          // Switch turn
+          currentPlayer.setTurn();
+          nextPlayer.setTurn();
+          console.log("Switching turns...");
+        } else {
+          console.log("Cell taken!");
+        }
       });
     });
-  }
-  
+  };
+
   const playRound = () => {
     const { currentPlayer, nextPlayer } = getCurrentPlayer();
     console.log("It's " + currentPlayer.name + "'s Turn");
@@ -227,7 +235,7 @@ const gameController = (function () {
   const playGame = () => {
     getCurrentPlayer();
     playRound();
-    checkForWinner();
+    // checkForWinner();
   };
 
   return { playGame, getCurrentPlayer, checkForWinner };
@@ -240,9 +248,4 @@ playerOne.setTurn(); // Player One starts
 const playerTwo = createPlayer("Player 2", 4);
 
 // Start game
-    gameController.playGame();
-
-
-
-
-
+gameController.playGame();
