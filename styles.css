@@ -26,7 +26,8 @@ h1{
 }
 
 .cell{
-    font-size: 2em;
+    font-family: "Merienda", cursive;
+    font-size: 3em;
     font-weight: 700;
     height: 100px;
     width: 100px;
@@ -34,4 +35,10 @@ h1{
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #ffffff;
+    transition: ease-in-out .2s;
+}
+
+.cell:hover{
+    background-color: #dadada;
 }

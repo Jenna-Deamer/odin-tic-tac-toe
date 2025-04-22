@@ -31,7 +31,7 @@ const gameBoard = (function () {
       console.log(row);
       // display value in each cell for each index in row
       row.forEach((cell) => {
-        const gameCell = document.createElement("div");
+        const gameCell = document.createElement("button");
         gameCell.classList.add("cell");
         // Display X, O or "" instead of num values
         if (cell === 1) {
@@ -97,9 +97,10 @@ const gameController = (function () {
     const { currentPlayer, nextPlayer } = getCurrentPlayer();
     console.log("It's " + currentPlayer.name + "'s Turn");
 
+
     const marker = currentPlayer.getMarker();
 
-    // gameBoard.setGameBoard(marker);
+    gameBoard.setGameBoard(marker);
 
     gameBoard.displayGameBoard();
     // gameBoard.printGameBoard();
