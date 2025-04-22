@@ -103,7 +103,7 @@ const gameController = (function () {
     }
   };
 
-  const getSelectedSquare = () =>{
+  const getSelectedSquare = (currentPlayer, nextPlayer) =>{
     const gameBoardCell = document.querySelectorAll(".cell");
     gameBoardCell.forEach((button) => {
       button.addEventListener("click", (e) => {
@@ -124,7 +124,7 @@ const gameController = (function () {
         currentPlayer.setTurn();
         nextPlayer.setTurn();
         console.log("Switching turns...");
-        checkForWinner();
+       
       });
     });
   }
@@ -133,7 +133,7 @@ const gameController = (function () {
     const { currentPlayer, nextPlayer } = getCurrentPlayer();
     console.log("It's " + currentPlayer.name + "'s Turn");
     gameBoard.displayGameBoard();
-    getSelectedSquare();
+    getSelectedSquare(currentPlayer, nextPlayer);
   };
 
   const checkForWinner = () => {
@@ -227,9 +227,10 @@ const gameController = (function () {
   const playGame = () => {
     getCurrentPlayer();
     playRound();
+    checkForWinner();
   };
 
-  return { playGame, getCurrentPlayer };
+  return { playGame, getCurrentPlayer, checkForWinner };
 })();
 
 // Create players
