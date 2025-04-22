@@ -1,3 +1,5 @@
+let gameOver = false;
+
 const gameBoardContainer = document.querySelector("#gameboard");
 // Game board module
 const gameBoard = (function () {
@@ -11,25 +13,25 @@ const gameBoard = (function () {
     return gameBoard;
   }
 
-  const setGameBoard = (marker,selectedRow, selectedCell) => {
+  const setGameBoard = (marker, selectedRow, selectedCell) => {
     gameBoard[selectedRow].splice(selectedCell, 1, marker);
   };
 
-//   const printGameBoard = () => {
-//     console.log(gameBoard[0]);
-//     console.log(gameBoard[1]);
-//     console.log(gameBoard[2]);
-//   };
+  //   const printGameBoard = () => {
+  //     console.log(gameBoard[0]);
+  //     console.log(gameBoard[1]);
+  //     console.log(gameBoard[2]);
+  //   };
 
   const displayGameBoard = () => {
     let rowId = -1;
     // clear previous board state to avoid duplicating boards
     gameBoardContainer.innerHTML = "";
-  
+
     // Loop through gameBoard to get each row
     gameBoard.forEach((row) => {
-        let id = 0; // id for buttons
-      
+      let id = 0; // id for buttons
+
       // loop through each individual row
       console.log("Row ");
       console.log(row);
@@ -40,7 +42,7 @@ const gameBoard = (function () {
         gameCell.classList.add("cell");
         gameCell.setAttribute("cell", id++);
         gameCell.setAttribute("row", rowId);
-     
+
         // Display X, O or "" instead of num values
         if (cell === 1) {
           gameCell.innerHTML = "X";
@@ -101,26 +103,20 @@ const gameController = (function () {
     }
   };
 
-  const playRound = () => {
-
-
-    const { currentPlayer, nextPlayer } = getCurrentPlayer();
-    console.log("It's " + currentPlayer.name + "'s Turn");
-    gameBoard.displayGameBoard();
-
+  const getSelectedSquare = () =>{
     const gameBoardCell = document.querySelectorAll(".cell");
     gameBoardCell.forEach((button) => {
       button.addEventListener("click", (e) => {
-        const clickedCell = button.getAttribute('cell');
-        const clickedRow = button.getAttribute('row');
+        const clickedCell = button.getAttribute("cell");
+        const clickedRow = button.getAttribute("row");
 
         const marker = currentPlayer.getMarker();
         // store what cell/row user clicked
         let selectedCell = clickedCell;
         let selectedRow = clickedRow;
-   
+
         // If cell is empty & gameOver != true/draw{}
-        gameBoard.setGameBoard(marker,selectedRow, selectedCell);
+        gameBoard.setGameBoard(marker, selectedRow, selectedCell);
         // re-run display to show change in board
         gameBoard.displayGameBoard();
 
@@ -128,8 +124,16 @@ const gameController = (function () {
         currentPlayer.setTurn();
         nextPlayer.setTurn();
         console.log("Switching turns...");
+        checkForWinner();
       });
     });
+  }
+  
+  const playRound = () => {
+    const { currentPlayer, nextPlayer } = getCurrentPlayer();
+    console.log("It's " + currentPlayer.name + "'s Turn");
+    gameBoard.displayGameBoard();
+    getSelectedSquare();
   };
 
   const checkForWinner = () => {
@@ -223,7 +227,6 @@ const gameController = (function () {
   const playGame = () => {
     getCurrentPlayer();
     playRound();
-    checkForWinner();
   };
 
   return { playGame, getCurrentPlayer };
@@ -236,4 +239,9 @@ playerOne.setTurn(); // Player One starts
 const playerTwo = createPlayer("Player 2", 4);
 
 // Start game
-gameController.playGame();
+    gameController.playGame();
+
+
+
+
+
