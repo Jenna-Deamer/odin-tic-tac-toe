@@ -115,7 +115,7 @@ const gameController = (function () {
         let selectedCell = clickedCell;
         let selectedRow = clickedRow;
 
-        // If cell is empty & gameOver != true/draw{}
+        // Prevent clicking a cell thats taken or when game is over
         if (button.innerHTML === "" && gameOver === false) {
           gameBoard.setGameBoard(marker, selectedRow, selectedCell);
           // re-run display to show change in board
@@ -124,7 +124,7 @@ const gameController = (function () {
             if(gameOver != false){
                 // Skip switching turns. Exit as soon as gameOver occurs
                 return;
-            }
+            };
     
           // Switch turn
           currentPlayer.setTurn();
