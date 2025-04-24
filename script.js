@@ -1,16 +1,16 @@
-let gameOver = false;
-
 const gameStartScreen = document.querySelector("#startScreen");
 const container = document.querySelector("#container");
+container.classList.add("hidden"); // Hide gameboard & results label until user clicks start
 const gameBoardContainer = document.querySelector("#gameboard");
+const resultsLabel = document.querySelector("#resultsLabel");
 
-container.classList.add("hidden");
+let gameOver = false;
 
 // Game board module
 const gameBoard = (function () {
   let gameBoard = [
     [0, 0, 0],
-    [0, 0, 1],
+    [0, 0, 4],
     [0, 0, 0],
   ];
 
@@ -28,8 +28,9 @@ const gameBoard = (function () {
   //     console.log(gameBoard[2]);
   //   };
 
-  const displayGameBoard = () => {
+  const displayGameBoard = (currentPlayer) => {
     let rowId = -1;
+    resultsLabel.textContent = currentPlayer.getName() + "'s Turn.";
     // clear previous board state to avoid duplicating boards
     gameBoardContainer.innerHTML = "";
 
@@ -97,25 +98,24 @@ const createPlayer = function (name, marker) {
 };
 
 const setPlayerNames = () => {
-    const playerOneInput = document.querySelector("#p1name").value;
-    const playerTwoInput = document.querySelector("#p2name").value;
-    if (playerOneInput) {
-      playerOne.setName(playerOneInput);
-      console.log(playerOne.getName());
-    }
-    else{
-      playerOne.setName("Player 1");
-    }
-    
-    if (playerTwoInput) {
-      playerTwo.setName(playerTwoInput);
-      console.log(playerTwo.getName());
-    }
-    else{
-      playerTwo.setName("Player 2");
-    }
-  };
-  
+  const playerOneInput = document.querySelector("#p1name").value;
+  const playerTwoInput = document.querySelector("#p2name").value;
+  if (playerOneInput) {
+    playerOne.setName(playerOneInput);
+    console.log(playerOne.getName());
+  } else {
+    playerOne.setName("Player 1");
+  }
+
+  if (playerTwoInput) {
+    playerTwo.setName(playerTwoInput);
+    console.log(playerTwo.getName());
+  } else {
+    playerTwo.setName("Player 2");
+  }
+};
+
+
 // Game controller module
 const gameController = (function () {
   const getCurrentPlayer = () => {
@@ -147,7 +147,7 @@ const gameController = (function () {
         if (button.innerHTML === "" && gameOver === false) {
           gameBoard.setGameBoard(marker, selectedRow, selectedCell);
           // re-run display to show change in board
-          gameBoard.displayGameBoard();
+          gameBoard.displayGameBoard(currentPlayer);
           checkForWinner();
           if (gameOver != false) {
             // Skip switching turns. Exit as soon as gameOver occurs
@@ -175,8 +175,9 @@ const gameController = (function () {
 
   const playRound = () => {
     const { currentPlayer, nextPlayer } = getCurrentPlayer();
+
     console.log("It's " + currentPlayer.getName() + "'s Turn");
-    gameBoard.displayGameBoard();
+    gameBoard.displayGameBoard(currentPlayer);
     getSelectedSquare(currentPlayer, nextPlayer);
   };
 
@@ -274,16 +275,13 @@ const gameController = (function () {
     // checkForWinner();
   };
 
-  return { startGame, getCurrentPlayer, checkForWinner };
+  return { startGame, getCurrentPlayer, checkForWinner, playGame };
 })();
 
-
-  
 // Create players
 const playerOne = createPlayer("Player 1", 1);
 playerOne.setTurn(); // Player One starts
 const playerTwo = createPlayer("Player 2", 4);
-
 
 // Start game
 gameController.startGame();
