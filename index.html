@@ -12,17 +12,26 @@
 <body>
     <h1>Tic Tac Toe</h1>
 
-    <div id="player-scores">
-        <h2>Player 1: <input type="text" id="p1name" name="p1name"></h2>
-        <p id="results-label"></p>
-        <h2>Player 2: <input type="text" id="p2name" name="p2name"></h2>
+    <div id="startScreen">
+        <div class="playerNameContainer">
+            <p>Player 1 (X)</p>
+            <input type="text" id="p1name" name="p1name" maxlength="15">
+
+            <p>Player 2 (O)</p>
+            <input type="text" id="p2name" name="p2name" maxlength="15">
+        </div>
+        <div id="startBtnContainer">
+            <button id="startBtn">Start Game</button>
+        </div>
     </div>
 
     <div id="container">
+        <h2 id="resultsLabel">Bob's Turn</h2>
         <div id="gameboard">
         </div>
+
     </div>
- 
+
 </body>
 
 </html>

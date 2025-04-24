@@ -1,6 +1,11 @@
 let gameOver = false;
 
+const gameStartScreen = document.querySelector("#startScreen");
+const container = document.querySelector("#container");
 const gameBoardContainer = document.querySelector("#gameboard");
+
+container.classList.add("hidden");
+
 // Game board module
 const gameBoard = (function () {
   let gameBoard = [
@@ -75,8 +80,14 @@ const createPlayer = function (name, marker) {
 
   const getMarker = () => marker;
 
+  const setName = (newName) => {
+    name = newName;
+  };
+  const getName = () => name;
+
   return {
-    name,
+    getName,
+    setName,
     getMarker,
     setTurn,
     getTurn,
@@ -85,10 +96,28 @@ const createPlayer = function (name, marker) {
   };
 };
 
+const setPlayerNames = () => {
+    const playerOneInput = document.querySelector("#p1name").value;
+    const playerTwoInput = document.querySelector("#p2name").value;
+    if (playerOneInput) {
+      playerOne.setName(playerOneInput);
+      console.log(playerOne.getName());
+    }
+    else{
+      playerOne.setName("Player 1");
+    }
+    
+    if (playerTwoInput) {
+      playerTwo.setName(playerTwoInput);
+      console.log(playerTwo.getName());
+    }
+    else{
+      playerTwo.setName("Player 2");
+    }
+  };
+  
 // Game controller module
 const gameController = (function () {
-  let gameOver = false;
-
   const getCurrentPlayer = () => {
     if (playerOne.getTurn()) {
       return {
@@ -102,7 +131,6 @@ const gameController = (function () {
       };
     }
   };
-
   const getSelectedSquare = (currentPlayer, nextPlayer) => {
     const gameBoardCell = document.querySelectorAll(".cell");
     gameBoardCell.forEach((button) => {
@@ -121,11 +149,11 @@ const gameController = (function () {
           // re-run display to show change in board
           gameBoard.displayGameBoard();
           checkForWinner();
-            if(gameOver != false){
-                // Skip switching turns. Exit as soon as gameOver occurs
-                return;
-            };
-    
+          if (gameOver != false) {
+            // Skip switching turns. Exit as soon as gameOver occurs
+            return;
+          }
+
           // Switch turn
           currentPlayer.setTurn();
           nextPlayer.setTurn();
@@ -136,10 +164,18 @@ const gameController = (function () {
       });
     });
   };
+  const startGame = () => {
+    document.querySelector("#startBtn").addEventListener("click", () => {
+      container.classList.remove("hidden");
+      gameStartScreen.classList.add("hidden");
+      setPlayerNames();
+      playGame();
+    });
+  };
 
   const playRound = () => {
     const { currentPlayer, nextPlayer } = getCurrentPlayer();
-    console.log("It's " + currentPlayer.name + "'s Turn");
+    console.log("It's " + currentPlayer.getName() + "'s Turn");
     gameBoard.displayGameBoard();
     getSelectedSquare(currentPlayer, nextPlayer);
   };
@@ -238,14 +274,16 @@ const gameController = (function () {
     // checkForWinner();
   };
 
-  return { playGame, getCurrentPlayer, checkForWinner };
+  return { startGame, getCurrentPlayer, checkForWinner };
 })();
 
+
+  
 // Create players
 const playerOne = createPlayer("Player 1", 1);
 playerOne.setTurn(); // Player One starts
-
 const playerTwo = createPlayer("Player 2", 4);
 
+
 // Start game
-gameController.playGame();
+gameController.startGame();

@@ -1,36 +1,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap');
 
-*{
+* {
     padding: unset;
     margin: unset;
     box-sizing: border-box;
 }
 
-body{
+body {
     min-height: 100vh;
     /* Gradient From: https://www.gradientmagic.com/collection/lightbg*/
-    background-image: repeating-linear-gradient(45deg, rgb(255,255,255) 0px, rgb(255,255,255) 10px,transparent 10px, transparent 11px),repeating-linear-gradient(135deg, rgb(255,255,255) 0px, rgb(255,255,255) 10px,transparent 10px, transparent 11px),linear-gradient(90deg, hsl(256,7%,84%),hsl(256,7%,84%));
+    background-image: repeating-linear-gradient(45deg, rgb(255, 255, 255) 0px, rgb(255, 255, 255) 10px, transparent 10px, transparent 11px), repeating-linear-gradient(135deg, rgb(255, 255, 255) 0px, rgb(255, 255, 255) 10px, transparent 10px, transparent 11px), linear-gradient(90deg, hsl(256, 7%, 84%), hsl(256, 7%, 84%));
     font-family: "Merienda", cursive;
 }
-h1{
+
+h1 {
     margin-bottom: 1em;
     text-align: center;
-    margin-top:  2em;
+    margin-top: 2em;
 }
-#container{
+
+
+
+#container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-#gameboard{
+#gameboard {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
 
 }
 
-.cell{
+.cell {
     font-family: "Merienda", cursive;
     font-size: 3em;
     font-weight: 700;
@@ -44,16 +48,49 @@ h1{
     transition: ease-in-out .2s;
 }
 
-.cell:hover{
+.cell:hover {
     background-color: #dadada;
 }
 
-#player-scores{
-    display: flex;
-    justify-content:space-evenly;
-    align-items: center;
-    margin-bottom: 1em;
+
+#resultsLabel {
+    margin: 1em 0;
 }
-#results-label{
-    font-size: 1.2em;
+
+.playerNameContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+}
+
+.playerNameContainer input {
+    padding: 4px;
+}
+
+#startBtnContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1em;
+}
+#startBtn{
+    padding: .5em 1em;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background-color: rgb(32, 59, 158);
+    color: #fff;
+    font-weight: 600;
+    font-size: 1em;
+    transition: all 0.3s ease-in-out;
+}
+#startBtn:hover{
+    background-color: rgb(20, 39, 106);
+}
+#startBtn:active{
+    transform: scale(.9);
+}
+.hidden {
+    display: none !important;
 }
