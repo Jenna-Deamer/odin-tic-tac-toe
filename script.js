@@ -10,7 +10,7 @@ let gameOver = false;
 const gameBoard = (function () {
   let gameBoard = [
     [0, 0, 0],
-    [0, 0, 4],
+    [0, 0, 0],
     [0, 0, 0],
   ];
 
@@ -30,7 +30,13 @@ const gameBoard = (function () {
 
   const displayGameBoard = (currentPlayer) => {
     let rowId = -1;
-    resultsLabel.textContent = currentPlayer.getName() + "'s Turn.";
+    if (gameOver === "Draw") {
+      resultsLabel.textContent = "It's a Draw!";
+    } else if (gameOver === true) {
+      resultsLabel.textContent = currentPlayer.getName() + " Has Won!";
+    } else {
+      resultsLabel.textContent = currentPlayer.getName() + "'s Turn.";
+    }
     // clear previous board state to avoid duplicating boards
     gameBoardContainer.innerHTML = "";
 
@@ -97,27 +103,31 @@ const createPlayer = function (name, marker) {
   };
 };
 
-const setPlayerNames = () => {
-  const playerOneInput = document.querySelector("#p1name").value;
-  const playerTwoInput = document.querySelector("#p2name").value;
-  if (playerOneInput) {
-    playerOne.setName(playerOneInput);
-    console.log(playerOne.getName());
-  } else {
-    playerOne.setName("Player 1");
-  }
-
-  if (playerTwoInput) {
-    playerTwo.setName(playerTwoInput);
-    console.log(playerTwo.getName());
-  } else {
-    playerTwo.setName("Player 2");
-  }
-};
-
-
 // Game controller module
 const gameController = (function () {
+  // Create players
+  const playerOne = createPlayer("Player 1", 1);
+  playerOne.setTurn(); // Player One starts
+  const playerTwo = createPlayer("Player 2", 4);
+
+  const setPlayerNames = () => {
+    const playerOneInput = document.querySelector("#p1name").value;
+    const playerTwoInput = document.querySelector("#p2name").value;
+    if (playerOneInput) {
+      playerOne.setName(playerOneInput);
+      console.log(playerOne.getName());
+    } else {
+      playerOne.setName("Player 1");
+    }
+
+    if (playerTwoInput) {
+      playerTwo.setName(playerTwoInput);
+      console.log(playerTwo.getName());
+    } else {
+      playerTwo.setName("Player 2");
+    }
+  };
+
   const getCurrentPlayer = () => {
     if (playerOne.getTurn()) {
       return {
@@ -131,6 +141,7 @@ const gameController = (function () {
       };
     }
   };
+
   const getSelectedSquare = (currentPlayer, nextPlayer) => {
     const gameBoardCell = document.querySelectorAll(".cell");
     gameBoardCell.forEach((button) => {
@@ -146,37 +157,37 @@ const gameController = (function () {
         // Prevent clicking a cell thats taken or when game is over
         if (button.innerHTML === "" && gameOver === false) {
           gameBoard.setGameBoard(marker, selectedRow, selectedCell);
+          checkForWinner();
           // re-run display to show change in board
           gameBoard.displayGameBoard(currentPlayer);
-          checkForWinner();
           if (gameOver != false) {
             // Skip switching turns. Exit as soon as gameOver occurs
             return;
           }
 
-          // Switch turn
+          // Switch turn & play again if gameOver is false
           currentPlayer.setTurn();
           nextPlayer.setTurn();
-          console.log("Switching turns...");
+          playGame();
         } else {
           console.log("Cell taken!");
         }
       });
     });
   };
+
   const startGame = () => {
     document.querySelector("#startBtn").addEventListener("click", () => {
       container.classList.remove("hidden");
       gameStartScreen.classList.add("hidden");
       setPlayerNames();
+      // Play first round
       playGame();
     });
   };
 
   const playRound = () => {
     const { currentPlayer, nextPlayer } = getCurrentPlayer();
-
-    console.log("It's " + currentPlayer.getName() + "'s Turn");
     gameBoard.displayGameBoard(currentPlayer);
     getSelectedSquare(currentPlayer, nextPlayer);
   };
@@ -272,16 +283,8 @@ const gameController = (function () {
   const playGame = () => {
     getCurrentPlayer();
     playRound();
-    // checkForWinner();
   };
 
-  return { startGame, getCurrentPlayer, checkForWinner, playGame };
+  // Start game
+  startGame();
 })();
-
-// Create players
-const playerOne = createPlayer("Player 1", 1);
-playerOne.setTurn(); // Player One starts
-const playerTwo = createPlayer("Player 2", 4);
-
-// Start game
-gameController.startGame();
