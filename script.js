@@ -3,9 +3,7 @@ const container = document.querySelector("#container");
 container.classList.add("hidden"); // Hide gameboard & results label until user clicks start
 const gameBoardContainer = document.querySelector("#gameboard");
 const resultsLabel = document.querySelector("#resultsLabel");
-
 let gameOver = false;
-
 // Game board module
 const gameBoard = (function () {
   let gameBoard = [
@@ -28,11 +26,17 @@ const gameBoard = (function () {
   //     console.log(gameBoard[2]);
   //   };
 
-  const displayGameBoard = (currentPlayer) => {
+  const displayGameBoard = (currentPlayer, playerOne, playerTwo) => {
     let rowId = -1;
-    if (gameOver === "Draw") {
+    if (
+      playerOne.getWinnerStatus() === true &&
+      playerTwo.getWinnerStatus() === true
+    ) {
       resultsLabel.textContent = "It's a Draw!";
-    } else if (gameOver === true) {
+    } else if (
+      playerOne.getWinnerStatus() === true ||
+      playerTwo.getWinnerStatus() === true
+    ) {
       resultsLabel.textContent = currentPlayer.getName() + " Has Won!";
     } else {
       resultsLabel.textContent = currentPlayer.getName() + "'s Turn.";
@@ -45,8 +49,6 @@ const gameBoard = (function () {
       let id = 0; // id for buttons
 
       // loop through each individual row
-      console.log("Row ");
-      console.log(row);
       rowId++;
       // display value in each cell for each index in row
       row.forEach((cell) => {
@@ -64,7 +66,6 @@ const gameBoard = (function () {
           gameCell.innerHTML = "";
         }
 
-        console.log("Cell " + cell);
         gameBoardContainer.appendChild(gameCell);
       });
     });
@@ -155,17 +156,24 @@ const gameController = (function () {
         let selectedRow = clickedRow;
 
         // Prevent clicking a cell thats taken or when game is over
-        if (button.innerHTML === "" && gameOver === false) {
+        if (
+          button.innerHTML === "" &&
+          playerOne.getWinnerStatus() === false &&
+          playerTwo.getWinnerStatus() === false
+        ) {
           gameBoard.setGameBoard(marker, selectedRow, selectedCell);
           checkForWinner();
           // re-run display to show change in board
-          gameBoard.displayGameBoard(currentPlayer);
-          if (gameOver != false) {
-            // Skip switching turns. Exit as soon as gameOver occurs
+          gameBoard.displayGameBoard(currentPlayer, playerOne, playerTwo);
+          if (
+            playerOne.getWinnerStatus() != false ||
+            playerTwo.getWinnerStatus() != false
+          ) {
+            // Skip switching turns. Exit as soon as there is a winner
             return;
           }
 
-          // Switch turn & play again if gameOver is false
+          // Switch turn & play again if isWinner is false
           currentPlayer.setTurn();
           nextPlayer.setTurn();
           playGame();
@@ -188,7 +196,7 @@ const gameController = (function () {
 
   const playRound = () => {
     const { currentPlayer, nextPlayer } = getCurrentPlayer();
-    gameBoard.displayGameBoard(currentPlayer);
+    gameBoard.displayGameBoard(currentPlayer, playerOne, playerTwo);
     getSelectedSquare(currentPlayer, nextPlayer);
   };
 
@@ -198,26 +206,30 @@ const gameController = (function () {
     let rowTwo = currentBoard[1];
     let rowThree = currentBoard[2];
 
+    console.log("Player win statues:");
+    console.log(playerOne.getWinnerStatus());
+    console.log(playerTwo.getWinnerStatus());
+
     let step = 0;
     console.log("Checking for winner...");
 
     // check row for winner
     for (let i = 0; i < currentBoard.length; i++) {
-      console.log("Row Step: " + step);
+    //   console.log("Row Step: " + step);
       step++;
 
       // Check sum of each row
       const sumRow = currentBoard[i].reduce(
         (total, current) => total + current
       );
-      console.log("Sum Row " + sumRow);
+    //   console.log("Sum Row " + sumRow);
 
       if (sumRow === 3) {
         console.log("Player One has won with a row!");
-        return (gameOver = true);
+        return playerOne.setWinnerStatus(true);
       } else if (sumRow === 12) {
         console.log("Player Two has won with a row!");
-        return (gameOver = true);
+        return playerTwo.setWinnerStatus(true);
       }
     }
     // reset step for next check
@@ -235,10 +247,10 @@ const gameController = (function () {
 
       if (sumCol === 3) {
         console.log("Player One has won with a column!");
-        return (gameOver = true);
+        return playerOne.setWinnerStatus(true);
       } else if (sumCol === 12) {
         console.log("Player Two has won with a column!");
-        return (gameOver = true);
+        return playerTwo.setWinnerStatus(true);
       }
     }
 
@@ -260,24 +272,26 @@ const gameController = (function () {
 
     if (sumDiagonalOne === 3 || sumDiagonalTwo === 3) {
       console.log("Player One has won with a diagonal!");
-      return (gameOver = true);
+      return playerOne.setWinnerStatus(true);
     } else if (sumDiagonalOne === 12 || sumDiagonalTwo === 12) {
       console.log("Player Two has won with a diagonal!");
-      return (gameOver = true);
+      return playerTwo.setWinnerStatus(true);
     }
 
-    for (let i = 0; i < currentBoard.length; i++) {
-      for (let j = 0; j < currentBoard[i]; j++) {
-        if (currentBoard[i][j] === 0) {
+    // Check for a Draw
+    for (let cell = 0; cell < currentBoard.length; cell++) {
+      for (let j = 0; j < currentBoard[cell]; j++) {
+        console.log(currentBoard[cell][j])
+        console.log('?')
+        if (currentBoard[cell][j] === 0) {
           console.log("zero found");
           return (gameOver = false);
-        } else {
-          gameOver = "Draw";
         }
+        console.log("DRAW");
+        playerOne.setWinnerStatus(true);
+        playerTwo.setWinnerStatus(true);
       }
     }
-
-    console.log(gameOver);
   };
 
   const playGame = () => {
@@ -287,4 +301,5 @@ const gameController = (function () {
 
   // Start game
   startGame();
+  return { checkForWinner };
 })();
