@@ -3,7 +3,9 @@ const container = document.querySelector("#container");
 container.classList.add("hidden"); // Hide gameboard & results label until user clicks start
 const gameBoardContainer = document.querySelector("#gameboard");
 const resultsLabel = document.querySelector("#resultsLabel");
-let gameOver = false;
+const restartBtn = document.querySelector("#restart-btn");
+restartBtn.addEventListener("click", () => gameController.resetGame());
+
 // Game board module
 const gameBoard = (function () {
     let gameBoard = [
@@ -20,6 +22,13 @@ const gameBoard = (function () {
         gameBoard[selectedRow].splice(selectedCell, 1, marker);
     };
 
+    const resetGameBoard = () => {
+        gameBoard = [
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+        ];
+    };
     //   const printGameBoard = () => {
     //     console.log(gameBoard[0]);
     //     console.log(gameBoard[1]);
@@ -70,7 +79,7 @@ const gameBoard = (function () {
             });
         });
     };
-    return { getGameBoard, setGameBoard, displayGameBoard };
+    return { getGameBoard, setGameBoard, displayGameBoard, resetGameBoard };
 })();
 
 // Player factory function
@@ -116,14 +125,12 @@ const gameController = (function () {
         const playerTwoInput = document.querySelector("#p2name").value;
         if (playerOneInput) {
             playerOne.setName(playerOneInput);
-            console.log(playerOne.getName());
         } else {
             playerOne.setName("Player 1");
         }
 
         if (playerTwoInput) {
             playerTwo.setName(playerTwoInput);
-            console.log(playerTwo.getName());
         } else {
             playerTwo.setName("Player 2");
         }
@@ -198,6 +205,14 @@ const gameController = (function () {
         });
     };
 
+    const resetGame = () => {
+        gameBoard.resetGameBoard();
+        container.classList.add("hidden");
+        gameStartScreen.classList.remove("hidden");
+        if (playerOne.getTurn() != true) {
+            playerOne.setTurn();
+        }
+    };
     const playRound = () => {
         const { currentPlayer, nextPlayer } = getCurrentPlayer();
         gameBoard.displayGameBoard(currentPlayer, playerOne, playerTwo);
@@ -210,12 +225,7 @@ const gameController = (function () {
         let rowTwo = currentBoard[1];
         let rowThree = currentBoard[2];
 
-        console.log("Player win statues:");
-        console.log(playerOne.getWinnerStatus());
-        console.log(playerTwo.getWinnerStatus());
-
         let step = 0;
-        console.log("Checking for winner...");
 
         // check row for winner
         for (let i = 0; i < currentBoard.length; i++) {
@@ -229,10 +239,8 @@ const gameController = (function () {
             //   console.log("Sum Row " + sumRow);
 
             if (sumRow === 3) {
-                console.log("Player One has won with a row!");
                 return playerOne.setWinnerStatus(true);
             } else if (sumRow === 12) {
-                console.log("Player Two has won with a row!");
                 return playerTwo.setWinnerStatus(true);
             }
         }
@@ -250,10 +258,8 @@ const gameController = (function () {
             //   console.log("Sum Col " + sumCol);
 
             if (sumCol === 3) {
-                console.log("Player One has won with a column!");
                 return playerOne.setWinnerStatus(true);
             } else if (sumCol === 12) {
-                console.log("Player Two has won with a column!");
                 return playerTwo.setWinnerStatus(true);
             }
         }
@@ -275,27 +281,21 @@ const gameController = (function () {
         );
 
         if (sumDiagonalOne === 3 || sumDiagonalTwo === 3) {
-            console.log("Player One has won with a diagonal!");
             return playerOne.setWinnerStatus(true);
         } else if (sumDiagonalOne === 12 || sumDiagonalTwo === 12) {
-            console.log("Player Two has won with a diagonal!");
             return playerTwo.setWinnerStatus(true);
         }
 
         // Check for a Draw
         for (let cell = 0; cell < currentBoard.length; cell++) {
-            console.log("Bee");
-            console.log(currentBoard[cell]);
             for (let j = 0; j < currentBoard[cell].length; j++) {
-                console.log("number" + currentBoard[cell][j]);
-
+                // If there are any zeros left on the board game is not over
                 if (currentBoard[cell][j] === 0) {
-                    console.log("zero found");
-                    return (gameOver = false);
+                    return;
                 }
             }
         }
-        console.log("DRAW");
+        // If all checks failed, Board is full set both winStatus to true
         playerOne.setWinnerStatus(true);
         playerTwo.setWinnerStatus(true);
     };
@@ -307,5 +307,6 @@ const gameController = (function () {
 
     // Start game
     startGame();
-    return { checkForWinner };
+
+    return { resetGame };
 })();
