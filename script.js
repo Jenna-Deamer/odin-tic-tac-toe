@@ -6,300 +6,306 @@ const resultsLabel = document.querySelector("#resultsLabel");
 let gameOver = false;
 // Game board module
 const gameBoard = (function () {
-  let gameBoard = [
-    [0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0],
-  ];
+    let gameBoard = [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0],
+    ];
 
-  function getGameBoard() {
-    return gameBoard;
-  }
-
-  const setGameBoard = (marker, selectedRow, selectedCell) => {
-    gameBoard[selectedRow].splice(selectedCell, 1, marker);
-  };
-
-  //   const printGameBoard = () => {
-  //     console.log(gameBoard[0]);
-  //     console.log(gameBoard[1]);
-  //     console.log(gameBoard[2]);
-  //   };
-
-  const displayGameBoard = (currentPlayer, playerOne, playerTwo) => {
-    let rowId = -1;
-    if (
-      playerOne.getWinnerStatus() === true &&
-      playerTwo.getWinnerStatus() === true
-    ) {
-      resultsLabel.textContent = "It's a Draw!";
-    } else if (
-      playerOne.getWinnerStatus() === true ||
-      playerTwo.getWinnerStatus() === true
-    ) {
-      resultsLabel.textContent = currentPlayer.getName() + " Has Won!";
-    } else {
-      resultsLabel.textContent = currentPlayer.getName() + "'s Turn.";
+    function getGameBoard() {
+        return gameBoard;
     }
-    // clear previous board state to avoid duplicating boards
-    gameBoardContainer.innerHTML = "";
 
-    // Loop through gameBoard to get each row
-    gameBoard.forEach((row) => {
-      let id = 0; // id for buttons
+    const setGameBoard = (marker, selectedRow, selectedCell) => {
+        gameBoard[selectedRow].splice(selectedCell, 1, marker);
+    };
 
-      // loop through each individual row
-      rowId++;
-      // display value in each cell for each index in row
-      row.forEach((cell) => {
-        const gameCell = document.createElement("button");
-        gameCell.classList.add("cell");
-        gameCell.setAttribute("cell", id++);
-        gameCell.setAttribute("row", rowId);
+    //   const printGameBoard = () => {
+    //     console.log(gameBoard[0]);
+    //     console.log(gameBoard[1]);
+    //     console.log(gameBoard[2]);
+    //   };
 
-        // Display X, O or "" instead of num values
-        if (cell === 1) {
-          gameCell.innerHTML = "X";
-        } else if (cell === 4) {
-          gameCell.innerHTML = "O";
+    const displayGameBoard = (currentPlayer, playerOne, playerTwo) => {
+        let rowId = -1;
+        if (
+            playerOne.getWinnerStatus() === true &&
+            playerTwo.getWinnerStatus() === true
+        ) {
+            resultsLabel.textContent = "It's a Draw!";
+        } else if (
+            playerOne.getWinnerStatus() === true ||
+            playerTwo.getWinnerStatus() === true
+        ) {
+            resultsLabel.textContent = currentPlayer.getName() + " Has Won!";
         } else {
-          gameCell.innerHTML = "";
+            resultsLabel.textContent = currentPlayer.getName() + "'s Turn.";
         }
+        // clear previous board state to avoid duplicating boards
+        gameBoardContainer.innerHTML = "";
 
-        gameBoardContainer.appendChild(gameCell);
-      });
-    });
-  };
-  return { getGameBoard, setGameBoard, displayGameBoard };
+        // Loop through gameBoard to get each row
+        gameBoard.forEach((row) => {
+            let id = 0; // id for buttons
+
+            // loop through each individual row
+            rowId++;
+            // display value in each cell for each index in row
+            row.forEach((cell) => {
+                const gameCell = document.createElement("button");
+                gameCell.classList.add("cell");
+                gameCell.setAttribute("cell", id++);
+                gameCell.setAttribute("row", rowId);
+
+                // Display X, O or "" instead of num values
+                if (cell === 1) {
+                    gameCell.innerHTML = "X";
+                } else if (cell === 4) {
+                    gameCell.innerHTML = "O";
+                } else {
+                    gameCell.innerHTML = "";
+                }
+
+                gameBoardContainer.appendChild(gameCell);
+            });
+        });
+    };
+    return { getGameBoard, setGameBoard, displayGameBoard };
 })();
 
 // Player factory function
 const createPlayer = function (name, marker) {
-  let isWinner = false;
-  let isTurn = false;
+    let isWinner = false;
+    let isTurn = false;
 
-  const getWinnerStatus = () => isWinner;
-  const setWinnerStatus = () => (isWinner = true);
+    const getWinnerStatus = () => isWinner;
+    const setWinnerStatus = () => (isWinner = true);
 
-  const getTurn = () => isTurn;
-  const setTurn = () => {
-    isTurn = !isTurn;
-  };
+    const getTurn = () => isTurn;
+    const setTurn = () => {
+        isTurn = !isTurn;
+    };
 
-  const getMarker = () => marker;
+    const getMarker = () => marker;
 
-  const setName = (newName) => {
-    name = newName;
-  };
-  const getName = () => name;
+    const setName = (newName) => {
+        name = newName;
+    };
+    const getName = () => name;
 
-  return {
-    getName,
-    setName,
-    getMarker,
-    setTurn,
-    getTurn,
-    setWinnerStatus,
-    getWinnerStatus,
-  };
+    return {
+        getName,
+        setName,
+        getMarker,
+        setTurn,
+        getTurn,
+        setWinnerStatus,
+        getWinnerStatus,
+    };
 };
 
 // Game controller module
 const gameController = (function () {
-  // Create players
-  const playerOne = createPlayer("Player 1", 1);
-  playerOne.setTurn(); // Player One starts
-  const playerTwo = createPlayer("Player 2", 4);
+    // Create players
+    const playerOne = createPlayer("Player 1", 1);
+    playerOne.setTurn(); // Player One starts
+    const playerTwo = createPlayer("Player 2", 4);
 
-  const setPlayerNames = () => {
-    const playerOneInput = document.querySelector("#p1name").value;
-    const playerTwoInput = document.querySelector("#p2name").value;
-    if (playerOneInput) {
-      playerOne.setName(playerOneInput);
-      console.log(playerOne.getName());
-    } else {
-      playerOne.setName("Player 1");
-    }
-
-    if (playerTwoInput) {
-      playerTwo.setName(playerTwoInput);
-      console.log(playerTwo.getName());
-    } else {
-      playerTwo.setName("Player 2");
-    }
-  };
-
-  const getCurrentPlayer = () => {
-    if (playerOne.getTurn()) {
-      return {
-        currentPlayer: playerOne,
-        nextPlayer: playerTwo,
-      };
-    } else {
-      return {
-        currentPlayer: playerTwo,
-        nextPlayer: playerOne,
-      };
-    }
-  };
-
-  const getSelectedSquare = (currentPlayer, nextPlayer) => {
-    const gameBoardCell = document.querySelectorAll(".cell");
-    gameBoardCell.forEach((button) => {
-      button.addEventListener("click", (e) => {
-        const clickedCell = button.getAttribute("cell");
-        const clickedRow = button.getAttribute("row");
-
-        const marker = currentPlayer.getMarker();
-        // store what cell/row user clicked
-        let selectedCell = clickedCell;
-        let selectedRow = clickedRow;
-
-        // Prevent clicking a cell thats taken or when game is over
-        if (
-          button.innerHTML === "" &&
-          playerOne.getWinnerStatus() === false &&
-          playerTwo.getWinnerStatus() === false
-        ) {
-          gameBoard.setGameBoard(marker, selectedRow, selectedCell);
-          checkForWinner();
-          // re-run display to show change in board
-          gameBoard.displayGameBoard(currentPlayer, playerOne, playerTwo);
-          if (
-            playerOne.getWinnerStatus() != false ||
-            playerTwo.getWinnerStatus() != false
-          ) {
-            // Skip switching turns. Exit as soon as there is a winner
-            return;
-          }
-
-          // Switch turn & play again if isWinner is false
-          currentPlayer.setTurn();
-          nextPlayer.setTurn();
-          playGame();
+    const setPlayerNames = () => {
+        const playerOneInput = document.querySelector("#p1name").value;
+        const playerTwoInput = document.querySelector("#p2name").value;
+        if (playerOneInput) {
+            playerOne.setName(playerOneInput);
+            console.log(playerOne.getName());
         } else {
-          console.log("Cell taken!");
+            playerOne.setName("Player 1");
         }
-      });
-    });
-  };
 
-  const startGame = () => {
-    document.querySelector("#startBtn").addEventListener("click", () => {
-      container.classList.remove("hidden");
-      gameStartScreen.classList.add("hidden");
-      setPlayerNames();
-      // Play first round
-      playGame();
-    });
-  };
+        if (playerTwoInput) {
+            playerTwo.setName(playerTwoInput);
+            console.log(playerTwo.getName());
+        } else {
+            playerTwo.setName("Player 2");
+        }
+    };
 
-  const playRound = () => {
-    const { currentPlayer, nextPlayer } = getCurrentPlayer();
-    gameBoard.displayGameBoard(currentPlayer, playerOne, playerTwo);
-    getSelectedSquare(currentPlayer, nextPlayer);
-  };
+    const getCurrentPlayer = () => {
+        if (playerOne.getTurn()) {
+            return {
+                currentPlayer: playerOne,
+                nextPlayer: playerTwo,
+            };
+        } else {
+            return {
+                currentPlayer: playerTwo,
+                nextPlayer: playerOne,
+            };
+        }
+    };
 
-  const checkForWinner = () => {
-    const currentBoard = gameBoard.getGameBoard();
-    let rowOne = currentBoard[0];
-    let rowTwo = currentBoard[1];
-    let rowThree = currentBoard[2];
+    const getSelectedSquare = (currentPlayer, nextPlayer) => {
+        const gameBoardCell = document.querySelectorAll(".cell");
+        gameBoardCell.forEach((button) => {
+            button.addEventListener("click", (e) => {
+                const clickedCell = button.getAttribute("cell");
+                const clickedRow = button.getAttribute("row");
 
-    console.log("Player win statues:");
-    console.log(playerOne.getWinnerStatus());
-    console.log(playerTwo.getWinnerStatus());
+                const marker = currentPlayer.getMarker();
+                // store what cell/row user clicked
+                let selectedCell = clickedCell;
+                let selectedRow = clickedRow;
 
-    let step = 0;
-    console.log("Checking for winner...");
+                // Prevent clicking a cell thats taken or when game is over
+                if (
+                    button.innerHTML === "" &&
+                    playerOne.getWinnerStatus() === false &&
+                    playerTwo.getWinnerStatus() === false
+                ) {
+                    gameBoard.setGameBoard(marker, selectedRow, selectedCell);
+                    checkForWinner();
+                    // re-run display to show change in board
+                    gameBoard.displayGameBoard(
+                        currentPlayer,
+                        playerOne,
+                        playerTwo
+                    );
+                    if (
+                        playerOne.getWinnerStatus() != false ||
+                        playerTwo.getWinnerStatus() != false
+                    ) {
+                        // Skip switching turns. Exit as soon as there is a winner
+                        return;
+                    }
 
-    // check row for winner
-    for (let i = 0; i < currentBoard.length; i++) {
-    //   console.log("Row Step: " + step);
-      step++;
+                    // Switch turn & play again if isWinner is false
+                    currentPlayer.setTurn();
+                    nextPlayer.setTurn();
+                    playGame();
+                } else {
+                    console.log("Cell taken!");
+                }
+            });
+        });
+    };
 
-      // Check sum of each row
-      const sumRow = currentBoard[i].reduce(
-        (total, current) => total + current
-      );
-    //   console.log("Sum Row " + sumRow);
+    const startGame = () => {
+        document.querySelector("#startBtn").addEventListener("click", () => {
+            container.classList.remove("hidden");
+            gameStartScreen.classList.add("hidden");
+            setPlayerNames();
+            // Play first round
+            playGame();
+        });
+    };
 
-      if (sumRow === 3) {
-        console.log("Player One has won with a row!");
-        return playerOne.setWinnerStatus(true);
-      } else if (sumRow === 12) {
-        console.log("Player Two has won with a row!");
-        return playerTwo.setWinnerStatus(true);
-      }
-    }
-    // reset step for next check
-    step = 0;
-    // Check columns
-    for (let i = 0; i < currentBoard.length; i++) {
-      //   console.log("Col Step: " + step);
-      step++;
+    const playRound = () => {
+        const { currentPlayer, nextPlayer } = getCurrentPlayer();
+        gameBoard.displayGameBoard(currentPlayer, playerOne, playerTwo);
+        getSelectedSquare(currentPlayer, nextPlayer);
+    };
 
-      let colArr = [rowOne[i], rowTwo[i], rowThree[i]];
+    const checkForWinner = () => {
+        const currentBoard = gameBoard.getGameBoard();
+        let rowOne = currentBoard[0];
+        let rowTwo = currentBoard[1];
+        let rowThree = currentBoard[2];
 
-      // check sum of each col
-      const sumCol = colArr.reduce((total, current) => total + current);
-      //   console.log("Sum Col " + sumCol);
+        console.log("Player win statues:");
+        console.log(playerOne.getWinnerStatus());
+        console.log(playerTwo.getWinnerStatus());
 
-      if (sumCol === 3) {
-        console.log("Player One has won with a column!");
-        return playerOne.setWinnerStatus(true);
-      } else if (sumCol === 12) {
-        console.log("Player Two has won with a column!");
-        return playerTwo.setWinnerStatus(true);
-      }
-    }
+        let step = 0;
+        console.log("Checking for winner...");
 
-    // Check diagonals outside of loop as there are only 2 possible
-    // 0,0 1,1 2,2
-    // 0,2, 1,1 2,
-    let diagonalOne = [rowOne[(0, 0)], rowTwo[(0, 1)], rowThree[(0, 2)]];
-    let diagonalTwo = [rowOne[(0, 2)], rowTwo[(0, 1)], rowThree[(0, 0)]];
-    // console.log(diagonalOne);
-    // console.log(diagonalTwo);
+        // check row for winner
+        for (let i = 0; i < currentBoard.length; i++) {
+            //   console.log("Row Step: " + step);
+            step++;
 
-    // Check Sum of each diagonal
-    const sumDiagonalOne = diagonalOne.reduce(
-      (total, current) => total + current
-    );
-    const sumDiagonalTwo = diagonalTwo.reduce(
-      (total, current) => total + current
-    );
+            // Check sum of each row
+            const sumRow = currentBoard[i].reduce(
+                (total, current) => total + current
+            );
+            //   console.log("Sum Row " + sumRow);
 
-    if (sumDiagonalOne === 3 || sumDiagonalTwo === 3) {
-      console.log("Player One has won with a diagonal!");
-      return playerOne.setWinnerStatus(true);
-    } else if (sumDiagonalOne === 12 || sumDiagonalTwo === 12) {
-      console.log("Player Two has won with a diagonal!");
-      return playerTwo.setWinnerStatus(true);
-    }
+            if (sumRow === 3) {
+                console.log("Player One has won with a row!");
+                return playerOne.setWinnerStatus(true);
+            } else if (sumRow === 12) {
+                console.log("Player Two has won with a row!");
+                return playerTwo.setWinnerStatus(true);
+            }
+        }
+        // reset step for next check
+        step = 0;
+        // Check columns
+        for (let i = 0; i < currentBoard.length; i++) {
+            //   console.log("Col Step: " + step);
+            step++;
 
-    // Check for a Draw
-    for (let cell = 0; cell < currentBoard.length; cell++) {
-      for (let j = 0; j < currentBoard[cell]; j++) {
-        console.log(currentBoard[cell][j])
-        console.log('?')
-        if (currentBoard[cell][j] === 0) {
-          console.log("zero found");
-          return (gameOver = false);
+            let colArr = [rowOne[i], rowTwo[i], rowThree[i]];
+
+            // check sum of each col
+            const sumCol = colArr.reduce((total, current) => total + current);
+            //   console.log("Sum Col " + sumCol);
+
+            if (sumCol === 3) {
+                console.log("Player One has won with a column!");
+                return playerOne.setWinnerStatus(true);
+            } else if (sumCol === 12) {
+                console.log("Player Two has won with a column!");
+                return playerTwo.setWinnerStatus(true);
+            }
+        }
+
+        // Check diagonals outside of loop as there are only 2 possible
+        // 0,0 1,1 2,2
+        // 0,2, 1,1 2,
+        let diagonalOne = [rowOne[(0, 0)], rowTwo[(0, 1)], rowThree[(0, 2)]];
+        let diagonalTwo = [rowOne[(0, 2)], rowTwo[(0, 1)], rowThree[(0, 0)]];
+        // console.log(diagonalOne);
+        // console.log(diagonalTwo);
+
+        // Check Sum of each diagonal
+        const sumDiagonalOne = diagonalOne.reduce(
+            (total, current) => total + current
+        );
+        const sumDiagonalTwo = diagonalTwo.reduce(
+            (total, current) => total + current
+        );
+
+        if (sumDiagonalOne === 3 || sumDiagonalTwo === 3) {
+            console.log("Player One has won with a diagonal!");
+            return playerOne.setWinnerStatus(true);
+        } else if (sumDiagonalOne === 12 || sumDiagonalTwo === 12) {
+            console.log("Player Two has won with a diagonal!");
+            return playerTwo.setWinnerStatus(true);
+        }
+
+        // Check for a Draw
+        for (let cell = 0; cell < currentBoard.length; cell++) {
+            console.log("Bee");
+            console.log(currentBoard[cell]);
+            for (let j = 0; j < currentBoard[cell].length; j++) {
+                console.log("number" + currentBoard[cell][j]);
+
+                if (currentBoard[cell][j] === 0) {
+                    console.log("zero found");
+                    return (gameOver = false);
+                }
+            }
         }
         console.log("DRAW");
         playerOne.setWinnerStatus(true);
         playerTwo.setWinnerStatus(true);
-      }
-    }
-  };
+    };
 
-  const playGame = () => {
-    getCurrentPlayer();
-    playRound();
-  };
+    const playGame = () => {
+        getCurrentPlayer();
+        playRound();
+    };
 
-  // Start game
-  startGame();
-  return { checkForWinner };
+    // Start game
+    startGame();
+    return { checkForWinner };
 })();
