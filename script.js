@@ -153,7 +153,7 @@ const gameController = (function () {
     const getSelectedSquare = (currentPlayer, nextPlayer) => {
         const gameBoardCell = document.querySelectorAll(".cell");
         gameBoardCell.forEach((button) => {
-            button.addEventListener("click", (e) => {
+            button.addEventListener("click", () => {
                 const clickedCell = button.getAttribute("cell");
                 const clickedRow = button.getAttribute("row");
 
